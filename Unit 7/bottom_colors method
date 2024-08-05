@@ -1,0 +1,22 @@
+def bottom_colors(image, k):
+    width, height = image.size
+    image_store = image.load()
+    points = list(set(image_store[x, y] for x in range(width) for y in range(height)))
+    zero, one, two = 0, 1, 2
+    points.sort(key=lambda i: i[zero] + i[one] + i[two])
+    #lambda alternative
+    def sum_tuple(t):
+        return sum(t)
+    points.sort(key=sum_tuple)
+    return_image = Image.new("RGB", (width, height + width//k))
+    points_all = return_image.load()
+    for x in range(width):
+        for y in range(height):
+            points_all[x, y] = image_store[x, y]
+    for i in range(k):
+        for x in range(width//k):
+            for y in range(width//k):
+                points_all[x + i * width//k, y + height] = points[i]
+    return return_image
+
+image = bottom_colors(img, k)
